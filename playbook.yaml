@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    rocketchat_domain: "{{ rocketchat_domain | default('localhost') }}"
+    rocketchat_domain: "{{ rocketchat_domain }}"
     rocketchat_home: "/rocketchat"  # Update this path
     mongo_db_root_password: "{{ mongo_db_root_password }}"
 
