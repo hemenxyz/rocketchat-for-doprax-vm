@@ -130,22 +130,9 @@
         echo 'rs.initiate()' | mongo -u root -p {{ mongo_db_root_password }} --authenticationDatabase admin
     
     - name: Initialize MongoDB replica set
-      docker_container:
-        name: mongo-init-replica
-        image: mongo:5
-        command: >
-          /bin/bash -c 
-          "until mongo --host localhost --port 27017 --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'; do sleep 5; done"
-        environment:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: "{{ mongo_db_root_password }}"
-        networks:
-          - name: rocketchat-network
-        depends_on:
-          - mongo
-        state: started
-        remove: yes
-        detach: yes
+      command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
+      become: yes
+
 
     - name: Rocket.Chat startup initialization
       debug:
