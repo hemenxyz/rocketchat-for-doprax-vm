@@ -69,6 +69,8 @@
         env:
           ROOT_URL: "http://{{ rocketchat_hostname }}"
           MONGO_URL: "mongodb://mongo:27017/rocketchat"
+          MONGO_URL: "mongodb://root:{{mongo_db_root_password}}@mongo:27017/rocketchat?authSource=admin"
+
         ports:
           - "3000:3000"
         volumes:
