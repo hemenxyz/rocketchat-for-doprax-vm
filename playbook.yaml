@@ -23,6 +23,12 @@
           - python3-pip
         update_cache: yes
       when: ansible_facts.packages['docker-ce'] is not defined
+    - name: Create MongoDB key file directory
+      file:
+        path: /etc/mongo
+        state: directory
+        mode: '0755'
+
 
     - name: Generate MongoDB key file
       shell: |
