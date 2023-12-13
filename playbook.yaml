@@ -85,7 +85,7 @@
     - name: Create and start MongoDB container for Rocket.Chat
       docker_container:
         name: mongo
-        image: mongo:4.0
+        image: mongo:5
         state: started
         restart_policy: always
         env:
