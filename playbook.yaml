@@ -1,0 +1,100 @@
+---
+- name: Install and Configure Rocket.Chat using Docker
+  hosts: all
+  become: yes
+
+  vars:
+    rocketchat_domain: "{{ rocketchat_domain | default('localhost') }}"
+    rocketchat_home: "/rocketchat"  # Update this path
+    mongo_db_root_password: "{{ mongo_db_root_password }}"
+
+  tasks:
+    - name: Install general prerequisites
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+          - python3
+          - python3-pip
+        update_cache: yes
+      when: ansible_facts.packages['docker-ce'] is not defined
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Install Docker Engine
+      apt:
+        name: docker-ce
+        update_cache: yes
+        state: latest
+
+    - name: Ensure Python Docker SDK is installed
+      pip:
+        name: docker
+        state: present
+        
+    - name: Ensure rocketchat_home directory exists
+      file:
+        path: "{{ rocketchat_home }}"
+        state: directory
+        owner: root  # You can change the owner and group as needed
+        group: root
+        mode: '0755'
+
+    - name: Pull Rocket.Chat Docker image
+      docker_image:
+        name: rocketchat/rocket.chat:latest
+        source: pull
+
+    - name: Create Rocket.Chat network
+      docker_network:
+        name: rocketchat-network
+    
+    - name: Create and start Rocket.Chat container
+      docker_container:
+        name: rocket-chat
+        image: rocketchat/rocket.chat:latest
+        state: started
+        restart_policy: always
+        env:
+          ROOT_URL: "http://{{ rocketchat_domain }}"
+          MONGO_URL: "mongodb://mongo:27017/rocketchat"
+        ports:
+          - "3000:3000"
+        volumes:
+          - "{{ rocketchat_home }}/data:/var/www/rocketchat"
+        networks:
+          - name: rocketchat-network
+
+    - name: Pull MongoDB Docker image for Rocket.Chat
+      docker_image:
+        name: mongo:4.0
+        source: pull
+
+    - name: Create and start MongoDB container for Rocket.Chat
+      docker_container:
+        name: mongo
+        image: mongo:4.0
+        state: started
+        restart_policy: always
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: "{{ mongo_db_root_password }}"  # Change this
+        volumes:
+          - "{{ rocketchat_home }}/mongo:/data/db"
+        networks:
+          - name: rocketchat-network
+
+    - name: Rocket.Chat startup initialization
+      debug:
+        msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_domain }}:3000 after the server is up to access Rocket.Chat"
