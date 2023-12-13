@@ -138,7 +138,7 @@
           "until mongo --host localhost --port 27017 --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'; do sleep 5; done"
         environment:
           MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: {{ mongo_db_root_password }}
+          MONGO_INITDB_ROOT_PASSWORD: "{{ mongo_db_root_password }}"
         networks:
           - name: rocketchat-network
         depends_on:
