@@ -80,7 +80,7 @@
 
     - name: Pull MongoDB Docker image for Rocket.Chat
       docker_image:
-        name: mongo:4.0
+        name: mongo:5
         source: pull
 
     - name: Create and start MongoDB container for Rocket.Chat
