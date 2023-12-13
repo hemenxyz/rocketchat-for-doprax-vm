@@ -7,6 +7,8 @@
     rocketchat_hostname: "{{ rocketchat_domain }}"
     rocketchat_home: "/rocketchat"  # Update this path
     mongo_db_root_password: "{{ mongo_db_root_password }}"
+    mongo_keyfile_path: "/etc/mongo/mongodb-keyfile"
+
 
   tasks:
     - name: Install general prerequisites
@@ -21,6 +23,13 @@
           - python3-pip
         update_cache: yes
       when: ansible_facts.packages['docker-ce'] is not defined
+
+    - name: Generate MongoDB key file
+      shell: |
+        openssl rand -base64 756 > {{ mongo_keyfile_path }}
+        chmod 400 {{ mongo_keyfile_path }}
+      args:
+        creates: "{{ mongo_keyfile_path }}"
 
     - name: Add Docker’s official GPG key
       apt_key:
