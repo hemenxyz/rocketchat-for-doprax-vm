@@ -77,15 +77,12 @@
         networks:
           - name: rocketchat-network
 
-    - name: Pull MongoDB Docker image for Rocket.Chat
-      docker_image:
-        name: mongo:5
-        source: pull
 
     - name: Create and start MongoDB container for Rocket.Chat
       docker_container:
         name: mongo
         image: mongo:5
+        command: mongod --replSet rs0
         state: started
         restart_policy: always
         env:
