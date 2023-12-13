@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    rocketchat_domain: "{{ rocketchat_domain }}"
+    rocketchat_hostname: "{{ rocketchat_domain }}"
     rocketchat_home: "/rocketchat"  # Update this path
     mongo_db_root_password: "{{ mongo_db_root_password }}"
 
@@ -67,7 +67,7 @@
         state: started
         restart_policy: always
         env:
-          ROOT_URL: "http://{{ rocketchat_domain }}"
+          ROOT_URL: "http://{{ rocketchat_hostname }}"
           MONGO_URL: "mongodb://mongo:27017/rocketchat"
         ports:
           - "3000:3000"
@@ -97,4 +97,4 @@
 
     - name: Rocket.Chat startup initialization
       debug:
-        msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_domain }}:3000 after the server is up to access Rocket.Chat"
+        msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_hostname }}:3000 after the server is up to access Rocket.Chat"
