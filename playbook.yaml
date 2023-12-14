@@ -125,9 +125,9 @@
         networks:
           - name: rocketchat-network
 
-    - name: Initialize MongoDB replica set
-      shell: |
-        echo 'rs.initiate()' | mongo -u root -p {{ mongo_db_root_password }} --authenticationDatabase admin
+    # - name: Initialize MongoDB replica set
+    #   shell: |
+    #     echo 'rs.initiate()' | mongo -u root -p {{ mongo_db_root_password }} --authenticationDatabase admin
     
     - name: Initialize MongoDB replica set
       command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
