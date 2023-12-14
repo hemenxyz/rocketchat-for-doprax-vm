@@ -1,1 +1,2 @@
-# rocketchat-for-doprax-vm
+# Rocket.Chat
+## One click installation on Doprax VM
