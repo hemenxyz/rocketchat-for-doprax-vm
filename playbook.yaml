@@ -89,6 +89,7 @@
         image: mongo:5
         state: started
         restart_policy: always
+        hostname: mongo
         command: mongod --replSet rs0 --auth --keyFile {{ mongo_keyfile_path }}
         env:
           MONGO_INITDB_ROOT_USERNAME: root
