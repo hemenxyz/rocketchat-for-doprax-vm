@@ -28,14 +28,15 @@
         path: /etc/mongo
         state: directory
         mode: '0755'
-
-
-    - name: Generate MongoDB key file
-      shell: |
-        openssl rand -base64 756 > {{ mongo_keyfile_path }}
-        chmod 400 {{ mongo_keyfile_path }}
-      args:
-        creates: "{{ mongo_keyfile_path }}"
+    
+    - name: Create MongoDB keyfile in YAML format
+      copy:
+        content: |
+          keyFile:
+            content: |
+              {{ yourBase64EncodedKey }}
+        dest: "{{mongo_keyfile_path}}"
+        mode: 0400  # Ensure the correct permissions
 
     - name: Add Docker’s official GPG key
       apt_key:
