@@ -32,12 +32,6 @@
         group: root
         mode: '0755'
 
-    - name: Create MongoDB key file directory
-      file:
-        path: /etc/mongo
-        state: directory
-        mode: '0755'
-
     - name: Generate MongoDB key
       command: "openssl rand -base64 32"
       register: generated_key
