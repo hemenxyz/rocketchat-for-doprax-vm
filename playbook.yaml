@@ -120,4 +120,4 @@
           
     - name: Rocket.Chat startup initialization
       debug:
-        msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_hostname }}:3000 after the server is up to access Rocket.Chat"
+        msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_hostname }} after the server is up to access Rocket.Chat"
