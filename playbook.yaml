@@ -35,14 +35,14 @@
       changed_when: false
       check_mode: no
     
-    - name: Create MongoDB keyfile in YAML format
-      copy:
-        content: |
-          keyFile:
-            content: |
-              {{ generated_key.stdout }}
-        dest: "{{mongo_keyfile_path}}"
-        mode: 0400  # Ensure the correct permissions
+    # - name: Create MongoDB keyfile in YAML format
+    #   copy:
+    #     content: |
+    #       keyFile:
+    #         content: |
+    #           {{ generated_key.stdout }}
+    #     dest: "{{mongo_keyfile_path}}"
+    #     mode: 0400  # Ensure the correct permissions
 
     - name: Add Docker’s official GPG key
       apt_key:
