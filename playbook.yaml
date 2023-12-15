@@ -23,6 +23,15 @@
           - python3-pip
         update_cache: yes
       when: ansible_facts.packages['docker-ce'] is not defined
+
+    - name: Ensure rocketchat_home directory exists
+      file:
+        path: "{{ rocketchat_home }}"
+        state: directory
+        owner: root  # You can change the owner and group as needed
+        group: root
+        mode: '0755'
+
     - name: Create MongoDB key file directory
       file:
         path: /etc/mongo
@@ -64,13 +73,6 @@
         name: docker
         state: present
         
-    - name: Ensure rocketchat_home directory exists
-      file:
-        path: "{{ rocketchat_home }}"
-        state: directory
-        owner: root  # You can change the owner and group as needed
-        group: root
-        mode: '0755'
 
     - name: Pull Rocket.Chat Docker image
       docker_image:
