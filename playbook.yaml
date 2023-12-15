@@ -102,6 +102,8 @@
     - name: Initialize MongoDB replica set
       command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
       become: yes
+      retries: 5  # Number of retry attempts
+      delay: 10    # Time to wait between retries in seconds
 
     - name: Create and start Rocket.Chat container
       docker_container:
