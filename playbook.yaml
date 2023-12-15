@@ -80,41 +80,7 @@
     - name: Create Rocket.Chat network
       docker_network:
         name: rocketchat-network
-    
-    - name: Create and start Rocket.Chat container
-      docker_container:
-        name: rocket-chat
-        image: rocketchat/rocket.chat:latest
-        state: started
-        restart_policy: always
-        env:
-          ROOT_URL: "http://{{ rocketchat_hostname }}"
-          MONGO_URL: "mongodb://root:{{mongo_db_root_password}}@mongo:27017/rocketchat?authSource=admin"
 
-    
-
-        ports:
-          - "3000:3000"
-        volumes:
-          - "{{ rocketchat_home }}/data:/var/www/rocketchat"
-        networks:
-          - name: rocketchat-network
-
-
-    # - name: Create and start MongoDB container for Rocket.Chat
-    #   docker_container:
-    #     name: mongo
-    #     image: mongo:5
-    #     command: mongod --replSet rs0
-    #     state: started
-    #     restart_policy: always
-    #     env:
-    #       MONGO_INITDB_ROOT_USERNAME: root
-    #       MONGO_INITDB_ROOT_PASSWORD: "{{ mongo_db_root_password }}"  # Change this
-    #     volumes:
-    #       - "{{ rocketchat_home }}/mongo:/data/db"
-    #     networks:
-    #       - name: rocketchat-network
     - name: Create and start MongoDB container for Rocket.Chat
       docker_container:
         name: mongo
@@ -130,16 +96,28 @@
           - "{{ mongo_keyfile_path }}:{{ mongo_keyfile_path }}"
         networks:
           - name: rocketchat-network
-
-    # - name: Initialize MongoDB replica set
-    #   shell: |
-    #     echo 'rs.initiate()' | mongo -u root -p {{ mongo_db_root_password }} --authenticationDatabase admin
     
     - name: Initialize MongoDB replica set
       command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
       become: yes
 
+    - name: Create and start Rocket.Chat container
+      docker_container:
+        name: rocket-chat
+        image: rocketchat/rocket.chat:latest
+        state: started
+        restart_policy: always
+        env:
+          ROOT_URL: "http://{{ rocketchat_hostname }}"
+          MONGO_URL: "mongodb://root:{{mongo_db_root_password}}@mongo:27017/rocketchat?authSource=admin"
+        ports:
+          - "3000:3000"
+        volumes:
+          - "{{ rocketchat_home }}/data:/var/www/rocketchat"
+        networks:
+          - name: rocketchat-network
 
+          
     - name: Rocket.Chat startup initialization
       debug:
         msg: "Rocket.Chat is starting up. You can visit http://{{ rocketchat_hostname }}:3000 after the server is up to access Rocket.Chat"
