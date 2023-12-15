@@ -115,7 +115,7 @@
           ROOT_URL: "http://{{ rocketchat_hostname }}"
           MONGO_URL: "mongodb://root:{{mongo_db_root_password}}@mongo:27017/rocketchat?authSource=admin"
         ports:
-          - "3000:3000"
+          - "80:3000"
         volumes:
           - "{{ rocketchat_home }}/data:/var/www/rocketchat"
         networks:
