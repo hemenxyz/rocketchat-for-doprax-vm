@@ -116,6 +116,8 @@
       become: yes
       retries: 5  # Number of retry attempts
       delay: 10    # Time to wait between retries in seconds
+      until: result.rc == 0
+
           
     - name: Rocket.Chat startup initialization
       debug:
