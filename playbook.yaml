@@ -111,24 +111,8 @@
         networks:
           - name: rocketchat-network
 
-    # - name: Initialize MongoDB replica set
-    #   command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
-    #   become: yes
-
     - name: Initialize MongoDB replica set
-      shell: >
-        docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin
-        --eval 'rs.initiate({
-          _id: "rs0",
-          members: [
-            { _id: 0, host: "http://mongo:27017" }
-          ],
-          settings: {
-            chainingAllowed: true,
-            heartbeatIntervalMillis: 1000,
-            heartbeatTimeoutSecs: 10
-          }
-        })'
+      command: docker exec mongo mongosh --username root --password {{ mongo_db_root_password }} --authenticationDatabase admin --eval 'rs.initiate()'
       become: yes
       retries: 5  # Number of retry attempts
       delay: 10    # Time to wait between retries in seconds
