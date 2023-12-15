@@ -29,21 +29,20 @@
         state: directory
         mode: '0755'
 
-    - name: Generate MongoDB key on the control machine
+    - name: Generate MongoDB key
       command: "openssl rand -base64 32"
       register: generated_key
       changed_when: false
       check_mode: no
-    
-    # - name: Create MongoDB keyfile in YAML format
-    #   copy:
-    #     content: |
-    #       keyFile:
-    #         content: |
-    #           {{ generated_key.stdout }}
-    #     dest: "{{mongo_keyfile_path}}"
-    #     mode: 0400  # Ensure the correct permissions
-
+      
+    - name: Create MongoDB keyfile
+      copy:
+        content: "{{ generated_key.stdout }}"
+        dest: "{{mongo_keyfile_path}}"
+        owner: 999
+        group: 999
+        mode: 0400  # Ensure the correct permissions
+        
     - name: Add Docker’s official GPG key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
