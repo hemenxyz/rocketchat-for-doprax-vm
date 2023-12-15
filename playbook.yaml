@@ -35,8 +35,6 @@
     - name: Generate MongoDB key
       command: "openssl rand -base64 32"
       register: generated_key
-      changed_when: false
-      check_mode: no
       
     - name: Create MongoDB keyfile
       copy:
