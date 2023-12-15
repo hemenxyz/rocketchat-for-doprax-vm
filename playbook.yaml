@@ -7,7 +7,7 @@
     rocketchat_hostname: "{{ rocketchat_domain }}"
     rocketchat_home: "/rocketchat"  # Update this path
     mongo_db_root_password: "{{ mongo_db_root_password }}"
-    mongo_keyfile_path: "/etc/mongo/mongodb-keyfile"
+    mongo_keyfile_path: "/rocketchat/mongo-key"
 
 
   tasks:
